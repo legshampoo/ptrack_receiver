@@ -16,8 +16,8 @@ var marginY = 0;
 var params = {
 		input: {
 				x: {
-					min: -.5,
-					max: 3.7
+					min: -2,
+					max: 5
 				},
 				y: {
 					min: 0,
