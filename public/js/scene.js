@@ -16,11 +16,11 @@ var marginY = 0;
 var params = {
 		input: {
 				x: {
-					min: -2,
-					max: 5
+					min: 1,
+					max: 4.5
 				},
 				y: {
-					min: 0,
+					min: .25,
 					max: 7,
 				}
 		},
@@ -145,6 +145,7 @@ function drawTrack(track){
 	var cy = map(track.x, params.input.x.min, params.input.x.max, params.output.y.max, params.output.y.min);
 
 	drawCircle(cx, cy, track);
+	drawRing(cx, cy, track);
 	drawID(cx, cy, track);
 	drawPosition(cx, cy, track);
 }
@@ -161,8 +162,18 @@ function drawCircle(cx, cy, track){
 	ctx.strokeStyle = 'white';
 	ctx.stroke();
 	ctx.closePath();
+
+	
 }
 
+function drawRing(cx, cy, track){
+	var radius = 100;
+	ctx.beginPath();
+	ctx.arc(cx, cy, radius, 0, 2 * Math.PI, false);
+	ctx.strokeStyle = '#FF00F0'
+	ctx.stroke();
+	ctx.closePath();
+}
 
 
 //draws the perimeter of the active area, the bounding rect
