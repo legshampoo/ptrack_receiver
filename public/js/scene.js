@@ -136,8 +136,13 @@ function update(){
 
 //draws the individual circle for each track
 function drawTrack(track){
-	var cx = map(track.y, params.input.y.min, params.input.y.max, params.output.x.min, params.output.x.max);
-	var cy = map(track.x, params.input.x.min, params.input.x.max, params.output.y.min, params.output.y.max);
+	//entrance on left, right head up
+	// var cx = map(track.y, params.input.y.min, params.input.y.max, params.output.x.min, params.output.x.max);
+	// var cy = map(track.x, params.input.x.min, params.input.x.max, params.output.y.min, params.output.y.max);
+
+	//entrance on Right
+	var cx = map(track.y, params.input.y.min, params.input.y.max, params.output.x.max, params.output.x.min);
+	var cy = map(track.x, params.input.x.min, params.input.x.max, params.output.y.max, params.output.y.min);
 
 	drawCircle(cx, cy, track);
 	drawID(cx, cy, track);
