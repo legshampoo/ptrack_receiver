@@ -150,7 +150,7 @@ function drawTrack(track){
 }
 
 function drawCircle(cx, cy, track){
-	var radius = 20;
+	var radius = 40;
 	ctx.beginPath();
 	//draw the inner circle
 	ctx.arc(cx, cy, radius, 0, 2 * Math.PI, false);
@@ -158,7 +158,7 @@ function drawCircle(cx, cy, track){
 	ctx.fill();
 	//draw the outer circle
 	ctx.lineWidth = 5;
-	ctx.strokeStyle = 'black';
+	ctx.strokeStyle = 'white';
 	ctx.stroke();
 	ctx.closePath();
 }
@@ -191,10 +191,10 @@ function drawOrigin(){
 // function drawID(track){
 function drawID(cx, cy, track){
 	ctx.beginPath();
-	ctx.font = '12px Arial';
+	ctx.font = '18px Arial';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillStyle = 'black';
+	ctx.fillStyle = 'white';
 	ctx.fillText(track.id, cx, cy);
 	ctx.closePath();
 }
@@ -203,12 +203,12 @@ function drawID(cx, cy, track){
 
 //draws the raw x,y coords to canvas (use for finding the min/max bounds coming from open_ptrack)
 function drawPosition(cx, cy, track){
-	ctx.font = '12px Arial';
+	ctx.font = '18px Arial';
 	ctx.textAlign = 'center';
 	ctx.textBaseline = 'middle';
-	ctx.fillStyle = 'black';
-	ctx.fillText('x: ' + track.x, cx, cy + 50);
-	ctx.fillText('y: ' + track.y, cx, cy + 60);
+	ctx.fillStyle = 'white';
+	ctx.fillText('x: ' + track.x, cx, cy + 60);
+	ctx.fillText('y: ' + track.y, cx, cy + 90);
 }
 
 
