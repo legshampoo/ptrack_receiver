@@ -1,5 +1,12 @@
-var ws = new WebSocket('ws://localhost:3030');
+//----------------------------------
+//	Listen for messages from node server
+//----------------------------------
 
+var SERVER_URI = '192.168.2.165';  //node server
+var PORT = 3030;		//websocket port
+// var ws = new WebSocket('ws://localhost:3030');
+// var ws = new WebSocket('ws://192.168.2.229:3030');
+var ws = new WebSocket('ws://' + SERVER_URI + ':' + PORT);
 
 var messages = {
 	data: {}
@@ -8,7 +15,7 @@ var messages = {
 ws.onmessage = function(event){
 	var msg = event.data;
 	if(msg.length < 2){
-		//incomplete string
+		// if the msg is an incomplete string, skip
 	}else{
 		try{
 			messages.data = JSON.parse(event.data);
@@ -17,9 +24,10 @@ ws.onmessage = function(event){
 			console.log(event.data);
 		}
 	}
-	// console.log(event.data);
-	// messages.raw = event.data;
-	// messages.data = JSON.parse(msg);
+	// console.log(msg);
+	// if(msg.data == "reload"){
+	// 	console.log('reload');
+	// }
 }
 
 exports = messages;

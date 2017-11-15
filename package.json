@@ -2,9 +2,9 @@
   "name": "data_receiver",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "./server/index.js",
   "scripts": {
-    "start:dev": "nodemon index.js"
+    "start:dev": "nodemon ./server/index.js"
   },
   "author": "",
   "license": "ISC",

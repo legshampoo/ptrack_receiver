@@ -147,8 +147,15 @@ do this.
 } // API_ConnectTracker
 
 
+function sendBrowserRefresh(){
+	if(web_socket){
+		console.log('send it here');
+	}
+}
+
 ///////////////////////////////////////////////////////////////////////////////
 /** EXPORT MODULE API ********************************************************/
 
 exports.connectTracker = API_ConnectTracker;
 exports.closeTracker = API_CloseTracker;
+// exports.

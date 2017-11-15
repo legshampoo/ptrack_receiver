@@ -5,10 +5,9 @@ var port = 3000;
 
 var ptrack = require('./comm/ptrack');
 
-app.use('/', express.static(path.join(__dirname, '/public')))
+app.use('/', express.static(path.join(__dirname, '../public')))
 
 app.get('/', function(req, res) {
-	// res.send('Helloooo');
 	res.sendFile('index.html');
 });
 
