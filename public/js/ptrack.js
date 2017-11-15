@@ -1,8 +1,8 @@
 //----------------------------------
 //	Listen for messages from node server
 //----------------------------------
-
-var SERVER_URI = '192.168.2.165';  //node server
+var SERVER_URI = 'localhost';
+// var SERVER_URI = '192.168.2.165';  //server address if listening to another machine
 var PORT = 3030;		//websocket port
 // var ws = new WebSocket('ws://localhost:3030');
 // var ws = new WebSocket('ws://192.168.2.229:3030');

@@ -8,10 +8,10 @@ const canvas = document.querySelector('#draw');
 const ctx = canvas.getContext('2d');
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
-var marginX = canvas.width / 6;  //margin for bounding box (should be '0' for production)
-var marginY = canvas.height / 6;
-// var marginX = 0;  //margin for bounding box (should be '0' for production)
-// var marginY = 0;
+// var marginX = canvas.width / 6;  //margin for bounding box (should be '0' for production)
+// var marginY = canvas.height / 6;
+var marginX = 0;  //margin for bounding box (should be '0' for production)
+var marginY = 0;
 
 var params = {
 		input: {
@@ -136,20 +136,9 @@ function update(){
 
 //draws the individual circle for each track
 function drawTrack(track){
-	var radius = 20;
-	// ctx.beginPath();
 	var cx = map(track.y, params.input.y.min, params.input.y.max, params.output.x.min, params.output.x.max);
 	var cy = map(track.x, params.input.x.min, params.input.x.max, params.output.y.min, params.output.y.max);
 
-	//draw the inner circle
-	// ctx.arc(cx, cy, radius, 0, 2 * Math.PI, false);
-	// ctx.fillStyle = track.color;
-	// ctx.fill();
-	// //draw the outer circle
-	// ctx.lineWidth = 5;
-	// ctx.strokeStyle = 'black';
-	// ctx.stroke();
-	// ctx.closePath();
 	drawCircle(cx, cy, track);
 	drawID(cx, cy, track);
 	drawPosition(cx, cy, track);
@@ -174,9 +163,11 @@ function drawCircle(cx, cy, track){
 //draws the perimeter of the active area, the bounding rect
 function drawBounds(){
 	ctx.beginPath();
-	ctx.strokeStyle = 'red';
-	ctx.lineWidth = 1;
+	ctx.strokeStyle = '#13FF00';
+	ctx.lineWidth = 10;
+	ctx.fillStyle = '#232323';
 	ctx.rect(params.output.x.min, params.output.y.min, params.output.x.max, params.output.y.max);
+	ctx.fill();
 	ctx.stroke();
 	ctx.closePath();
 }
