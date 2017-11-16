@@ -21,7 +21,7 @@ var params = {
 				},
 				y: {
 					min: .25,
-					max: 7,
+					max: 7.4,
 				}
 		},
 		output: {
@@ -34,7 +34,13 @@ var params = {
 					max: canvas.height - (2 * marginY)
 				}
 		},
-		framerate: 60
+		framerate: 60,
+		circle: {
+			centerRadius: 40
+			centerRingColor: 'white',  //the ring around the inner circle
+			ringRadius: 150,		//the large ring
+			ringColor: '#FF00F0'  //hot pink
+		}
 }
 
 
@@ -154,23 +160,25 @@ function drawCircle(cx, cy, track){
 	var radius = 40;
 	ctx.beginPath();
 	//draw the inner circle
-	ctx.arc(cx, cy, radius, 0, 2 * Math.PI, false);
+	ctx.arc(cx, cy, params.circle.centerRadius, 0, 2 * Math.PI, false);
 	ctx.fillStyle = track.color;
 	ctx.fill();
 	//draw the outer circle
 	ctx.lineWidth = 5;
-	ctx.strokeStyle = 'white';
+	// ctx.strokeStyle = 'white';
+	ctx.strokeStyle = params.circle.centerRingColor;
 	ctx.stroke();
 	ctx.closePath();
 
-	
+
 }
 
 function drawRing(cx, cy, track){
-	var radius = 100;
+	// var radius = 100;
 	ctx.beginPath();
-	ctx.arc(cx, cy, radius, 0, 2 * Math.PI, false);
-	ctx.strokeStyle = '#FF00F0'
+	ctx.arc(cx, cy, params.circle.ringRadius, 0, 2 * Math.PI, false);
+	// ctx.strokeStyle = '#FF00F0'
+	ctx.strokeStyle = params.circle.ringColor;
 	ctx.stroke();
 	ctx.closePath();
 }
