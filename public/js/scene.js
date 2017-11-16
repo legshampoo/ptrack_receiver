@@ -36,7 +36,7 @@ var params = {
 		},
 		framerate: 60,
 		circle: {
-			centerRadius: 40
+			centerRadius: 40,
 			centerRingColor: 'white',  //the ring around the inner circle
 			ringRadius: 150,		//the large ring
 			ringColor: '#FF00F0'  //hot pink
