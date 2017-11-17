@@ -16,12 +16,12 @@ var marginY = 0;
 var params = {
 		input: {
 				x: {
-					min: 1,
-					max: 4.5
+					min: .9,
+					max: 4.35
 				},
 				y: {
-					min: .25,
-					max: 7.4,
+					min: .6,
+					max: 7.0,
 				}
 		},
 		output: {
@@ -34,7 +34,7 @@ var params = {
 					max: canvas.height - (2 * marginY)
 				}
 		},
-		framerate: 60,
+		framerate: 30,
 		circle: {
 			centerRadius: 40,
 			centerRingColor: 'white',  //the ring around the inner circle
@@ -74,7 +74,7 @@ function init(){
 //set the framerate with params.framerate (should be at 30 or 60, typically)
 function update(){
 	// console.log(counter);  //this is just a debug dummy check that the loop is running smoothly
-	counter++;
+	// counter++;
 
 	// drawOrigin();
 	drawBounds();  //draw the bounding rectangle
@@ -83,7 +83,7 @@ function update(){
 
 	// if there are no tracks in the array, return
 	if(tracks === undefined){
-		console.log('waiting for track data...');
+		console.log('no tracks detected...');
 		requestAnimationFrame(update);
 		return;
 	}
@@ -128,10 +128,10 @@ function update(){
 	//draw the updated tracks
 	tracks.forEach((track) => {
 		drawTrack(track);  //draw each circle
-		// drawID(track);		//draw each track.id as text
-		// drawPosition(track);  	//draw the raw x,y coords to canvas
-	})
+	});
 
+
+	drawFramerate();
 	setTimeout(() => {
 		ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);  //clear the canvas so we don't have residual images
 		requestAnimationFrame(update);  //start the loop again
@@ -266,6 +266,27 @@ function randomColor_hsla(){
 	}
 
 	return c
+}
+
+// var maxFrameTime = 1000/60; //60fps
+var t, previousTime;
+var counter = 0;
+function drawFramerate(){
+	var cx = 10;
+	var cy = 20;
+	t = performance.now();
+	var elapsed = t - previousTime;
+	previousTime = t;
+	// console.log('elapsed: ', elapsed);
+	// if(counter % 1 === 0){
+		ctx.font = '18px Arial';
+		ctx.textAlign = 'left';
+		ctx.textBaseline = 'middle';
+		ctx.fillStyle = 'white';
+		elapsed = elapsed.toFixed(2);
+		ctx.fillText('fps: ' + elapsed, cx, cy);
+	// }
+	counter++;
 }
 
 
