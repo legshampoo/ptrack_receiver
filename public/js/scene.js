@@ -277,15 +277,16 @@ function drawFramerate(){
 	t = performance.now();
 	var elapsed = t - previousTime;
 	previousTime = t;
-	// console.log('elapsed: ', elapsed);
-	// if(counter % 1 === 0){
-		ctx.font = '18px Arial';
-		ctx.textAlign = 'left';
-		ctx.textBaseline = 'middle';
-		ctx.fillStyle = 'white';
-		elapsed = elapsed.toFixed(2);
-		ctx.fillText('fps: ' + elapsed, cx, cy);
-	// }
+	var fps = 1000 / elapsed;
+	fps = fps.toFixed(0);
+	ctx.font = '18px Arial';
+	ctx.textAlign = 'left';
+	ctx.textBaseline = 'middle';
+	ctx.fillStyle = 'white';
+	// elapsed = elapsed.toFixed(2);
+
+	ctx.fillText('fps: ' + fps, cx, cy);
+
 	counter++;
 }
 
