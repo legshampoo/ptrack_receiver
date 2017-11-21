@@ -1,12 +1,12 @@
 var start = process.hrtime();  //to track time between msgs
 var ptracks = []; //holds previous tracks
 
-// var marginX = 0;  //margin for bounding box (should be '0' for production)
-// var marginY = 0;
-
 var canvasWidth = 1920;
 var canvasHeight = 1080;
 
+
+// input(x, y) min/max are the values of the raw ptrack data
+//output(x, y) are the mapped values to the browser/unity canvas
 var params = {
 		input: {
 				x: {
@@ -29,8 +29,6 @@ var params = {
 				}
 		}
 }
-
-
 
 var methods = {
   getTracks: function(msg){
@@ -60,9 +58,9 @@ var methods = {
     });
 
     //ptracks is our array for storing the previous tracks from last frame
-    //check for matches against the previous tracks
+    //check 'tracks' for matches against the previous tracks to maintain consistent colors
     //set the matched state to true or false for later use
-    //if true, use the ptrack color for the new track
+    //if there is a match, flag as 'true' and update the color
     ptracks.forEach((ptrack) => {
       tracks.forEach((track) => {
         if(track.id === ptrack.id){
@@ -80,7 +78,7 @@ var methods = {
       }
     });
 
-    //if a CURRENT track is unmatched, it means it's 'new'
+    //if a current 'track' is unmatched, it means it's 'new'
     //add it to the ptrack array
     tracks.forEach((track) => {
       if(track.matched === false){
@@ -96,20 +94,21 @@ var methods = {
       track.cy = cy;
     });
 
-    // console.log(tracks);
-
     return tracks;
   },
 
   elapsedTime: function logMsgFramerate(){
+		//this is used to measure the ms elapsed between each message from the open_ptrack broadcast
   	elapsed_time("time since last message");
   }
 }
 
+
+
+
 //----------------------------------------------------------------
 //  Helpers
 //----------------------------------------------------------------
-
 
 //map the raw open_ptrack data to the canvas bounds
 function map(value, low1, high1, low2, high2){

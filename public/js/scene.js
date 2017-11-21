@@ -5,7 +5,7 @@ canvas.height = window.innerHeight;
 
 var params = {
   circle: {
-    centerRadius: 40,
+    centerRadius: 40,  //size of the center tracking circle
     centerRingColor: 'white',  //the ring around the inner circle
     ringRadius: 150,  // the large ring
     ringColor: '#FF00F0'  //hot pink
@@ -34,8 +34,6 @@ function update(){
     return;
   }
 
-  // console.log(tracks);
-
   drawTracks(tracks);
 
   setTimeout(() => {
@@ -49,8 +47,6 @@ function update(){
 //------------------------------------------------
 
 function drawTracks(tracks){
-
-  // console.log(tracks[0]);
   tracks.forEach((track) => {
     drawCircle(track);
     drawRing(track);
@@ -82,7 +78,6 @@ function drawRing(track){
 
 
 //draws the track.id text to canvas
-// function drawID(track){
 function drawId(track){
 	ctx.beginPath();
 	ctx.font = '18px Arial';

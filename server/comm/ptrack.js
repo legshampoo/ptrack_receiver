@@ -15,51 +15,46 @@ var mc = {
 	host: 	undefined 		// undefined so node listens to all hosts
 }
 
+//--------------------------------------------------------
+//Main exported function to effect UDP listening and TCP forwarding on websocket.
+//--------------------------------------------------------
 
-/*/	Main exported function to effect UDP listening and TCP forwarding on
-websocket.
-/*/
 function API_ConnectTracker () {
 
-/**	1. create UDP listener to remote camera tracker **********************/
-
-	udp_socket = dgram.createSocket('udp4');
+	udp_socket = dgram.createSocket('udp4'); // create UDP listener to remote camera tracker
 
 	// connect to UDP group/host (host is optional)
 	udp_socket.bind ( mc.port, mc.host, function () {
 		var address = udp_socket.address();
-		console.log("*** LISTENING TO "+address.address+" PORT "+address.port+" ("+address.family+") ***")
-		// enable receiving multicast packets
-		udp_socket.setMulticastLoopback ( true);
-		// join multicast group
-		udp_socket.addMembership( mc.group, mc.host );
+		console.log("*** LISTENING TO " + address.address + " PORT " + address.port + " (" + address.family + ") ***");
+		udp_socket.setMulticastLoopback ( true);  // enable receiving multicast packets
+		udp_socket.addMembership( mc.group, mc.host );  // join multicast group
 	});
 
-
 	udp_socket.on('message', function(msg, rinfo){
-		dataHandler.elapsedTime();  //log the time since last msg received
+		dataHandler.elapsedTime();  //log the time since last msg received, comment out for production
 
 		var msgString = msg.toString();
 		msgString = msgString.substr(0, msgString.indexOf(']}') + 2);
 
-		var tracks = dataHandler.getTracks(msgString);
+		var tracks = dataHandler.getTracks(msgString);  //parse the tracks
 
-		tracks = dataHandler.processTracks(tracks);  //match them to previous tracks
+		tracks = dataHandler.processTracks(tracks);  //process the tracks data to fit the canvas
 
 		// send data to client
 		if (web_socket) {
 	  	// web_socket.send(tracks);
+			console.log(tracks);
 			web_socket.send(JSON.stringify(tracks));
 	  }
 	})
 
-/**	2. create TCP server on port 3030 for browser-based web app **********/
 
-	// create a websocket server to listen to...
-	// TCP Port 3030 is an arbitrary port.
+//--------------------------------------------------------
+// create websocket connection on port 3030 for browser
+//--------------------------------------------------------
 	wss = new WebSocketServer( { port: 3030 } );
 
-	// connect to TCP port
 	wss.on('connection', function ( wsocket ) {
 		console.log("*** 3030 Browser Client Connect");
 		web_socket = wsocket;
@@ -83,13 +78,6 @@ function API_CloseTracker () {
 	if (wss) wss.close();
 	if (udp_socket) udp_socket.close();
 	console.log("\n*** closing connections\n");
-
-}
-
-function sendBrowserRefresh(){
-	if(web_socket){
-		console.log('send it here');
-	}
 }
 
 exports.connectTracker = API_ConnectTracker;
