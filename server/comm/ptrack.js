@@ -1,45 +1,7 @@
-/**	PTRACK CONNECTION ********************************************************\
-	This code fragment can be incorporated within a NodeJS-based server
-	instance. It reads from a UDP broadcast address and then writes to
-	a TCP socket. A client browser using a websocket connection can then
-	receive data as it arrives.
-	This code will likely not run stand-alone, but is provided as a template
-	for adding it to your own server code as a module.
-	HOW UDP WORKS
-	Multicast is one computer sending a UDP package to a special IP address,
-	in the range 224.0.0.1 through 239.255.255.255. These "groups" are
-	assigned by IANA:
-	http://www.iana.org/assignments/multicast-addresses/multicast-addresses.xhtml
-	The magic of multicast is that the network hardware propagates packets
-	across routers, and anyone can listen. To listen, you specify a host and a
-	group address. If you want to listen to all UDP traffic, don't specify a
-	host, and just use the group address.
-	GENERAL APPROACH
-	1. create socket for udp4
-	2. enable multicast reception
-	3. set multicast TTL (not necessary I suspect for a client)
-	4. join a channel/group (224.0.0.1). Add originating host if necessary
-	5. bind 'message' event to handler to receive packets
-	From what I understand:
-	The UDP source has a host_address and a port. Together this identifies
-	the source, which then puts all its traffic on a multicast_group_address.
-	A listener would bind to the port, and instead of selecting host_address
-	it would bind to the multicast_group_address (done by adding membership).
-	If the multicast_address is a regular one, then one must also designate
-	the host_address to receive packets from it even if a member of the
-	multicast_group_address.
-	references:
-	http://stackoverflow.com/questions/14130560/nodejs-udp-multicast-how-to
-	developed as part of REMAP/STEP
-	- report bugs to david@davidseah.com or ben@inquirium.net
-///////////////////////////////////////////////////////////////////////////////
-/** MODULE-WIDE VARIABLES ****************************************************/
-
-//	required node modules
 var dgram = require('dgram');
 var WebSocketServer = require('ws').Server;
+var dataHandler = require('../utils/dataHandler');
 
-// 	udp socket connection
 var udp_socket;
 
 // 	web socket connection
@@ -54,10 +16,6 @@ var mc = {
 }
 
 
-///////////////////////////////////////////////////////////////////////////////
-/** MODULE FUNCTIONS *********************************************************/
-
-///	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 /*/	Main exported function to effect UDP listening and TCP forwarding on
 websocket.
 /*/
@@ -77,44 +35,28 @@ function API_ConnectTracker () {
 		udp_socket.addMembership( mc.group, mc.host );
 	});
 
-	// set up event handler for receving UDP data
-
-	// NOTE:
- 	// msg is a buffer object: http://nodejs.org/api/buffer.html
-	// The conversion below is a little hacky, but works to
-	// extract the JSON-encoded string.
-	// msg.toString() grabs all the garbage after the end of the json
-	// msg.toJSON() doesn't work because it grabs each byte as a number
-
-	// udp_socket.once('message',function( msg, rinfo ) {
-	// 	console.log('got msg');
-	// 	// convert msg to string, hack-style!
-	// 	var s = msg.toString();
-	// 	s = s.substr(0,s.indexOf(']}')+2);
-	// 	console.log(s);
-	// 	// if TCP socket is available, forward string
-	// 	if (web_socket) {
-	//     	web_socket.send(s);
-	//     }
-	// });
 
 	udp_socket.on('message', function(msg, rinfo){
-		// console.log(msg);
-		var s = msg.toString();
-		s = s.substr(0,s.indexOf(']}')+2);
-		// console.log(s);
-		// var d = JSON.parse(s);
-		// if TCP socket is available, forward string
+		dataHandler.elapsedTime();  //log the time since last msg received
+
+		var msgString = msg.toString();
+		msgString = msgString.substr(0, msgString.indexOf(']}') + 2);
+
+		var tracks = dataHandler.getTracks(msgString);
+
+		tracks = dataHandler.processTracks(tracks);  //match them to previous tracks
+
+		// send data to client
 		if (web_socket) {
-	    	// web_socket.send(s);
-	    	web_socket.send(s);
-	    }
+	  	// web_socket.send(tracks);
+			web_socket.send(JSON.stringify(tracks));
+	  }
 	})
 
 /**	2. create TCP server on port 3030 for browser-based web app **********/
 
 	// create a websocket server to listen to...
-	// NOTE: TCP Port 3030 is an arbitrary port.
+	// TCP Port 3030 is an arbitrary port.
 	wss = new WebSocketServer( { port: 3030 } );
 
 	// connect to TCP port
@@ -133,19 +75,16 @@ function API_ConnectTracker () {
 		web_socket = null;
 	});
 
-} // API_ConnectTracker
+}
 
-///	- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-/*/	Brute-force close all open sockets. This might not be the right way to
-do this.
-/*/	function API_CloseTracker () {
+//brute force close connection
+function API_CloseTracker () {
 	if (web_socket) web_socket.close();
 	if (wss) wss.close();
 	if (udp_socket) udp_socket.close();
 	console.log("\n*** closing connections\n");
 
-} // API_ConnectTracker
-
+}
 
 function sendBrowserRefresh(){
 	if(web_socket){
@@ -153,9 +92,5 @@ function sendBrowserRefresh(){
 	}
 }
 
-///////////////////////////////////////////////////////////////////////////////
-/** EXPORT MODULE API ********************************************************/
-
 exports.connectTracker = API_ConnectTracker;
 exports.closeTracker = API_CloseTracker;
-// exports.
