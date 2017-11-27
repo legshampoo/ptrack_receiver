@@ -16,4 +16,4 @@ app.listen(port, function (){
 	console.log('App listening on port ', port);
 });
 
-ptrack.connectTracker();
+ptrack.connectTracker(app);

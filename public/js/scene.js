@@ -27,6 +27,7 @@ function init(){
 
 function update(){
   drawBounds();
+  console.log(messages);
   var tracks = messages.tracks;
 
   if(tracks === undefined){
@@ -47,12 +48,13 @@ function update(){
 //------------------------------------------------
 
 function drawTracks(tracks){
-  tracks.forEach((track) => {
-    drawCircle(track);
-    drawRing(track);
-    drawId(track);
-    drawPosition(track);
-  })
+	console.log("draw tracks",tracks)
+	tracks.forEach((track) => {
+	    drawCircle(track);
+	    drawRing(track);
+	    drawId(track);
+	    drawPosition(track);
+	})
 }
 
 //draw the inner circle
